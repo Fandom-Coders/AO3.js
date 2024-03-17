@@ -160,6 +160,8 @@ export interface WorkSummary {
   locked: false;
 }
 
+
+
 export interface LockedWorkSummary {
   locked: true;
 }
@@ -171,4 +173,46 @@ export interface Chapter {
   title: string;
   publishedAt: string;
   url: string;
+}
+
+export interface PromptFillSummary
+  extends Omit<
+    WorkSummary,
+    | "publishedAt"
+    | "locked"
+  > {
+}
+
+export interface Prompt {
+  postedAt: string;
+  summary: string | null;
+  collectionDisplayTitle: string;
+  ratings: WorkRatings[];
+  author: Author | "Anonymous";
+  fandoms: string[];
+  // warnings are not neccessarily tags in prompts, 
+  // but are here to be consistent with the WorkSummary interface
+  tags: {
+    warnings: WorkWarnings[];
+    characters: string[];
+    relationships: string[];
+    additional: string[];
+  };
+  // Ao3 does not show pseuds in claimant lists, only usernames.
+  // whether claims are anon or not is dependant on collection's "anonymous collection" setting.
+  // see https://github.com/otwcode/otwarchive/blob/master/app/views/prompts/_prompt_blurb.html.erb and https://github.com/otwcode/otwarchive/blob/app/models/collection.rb
+  
+  //proposed alternation: 
+  // null
+  // | {count: number, usernames: string[] | null}
+  claims:
+      {count: 0;}
+    | {count: number; isAnonCollection: true;}
+    | {count: number; isAnonCollection: false; claimantUsernames: string[];};
+  title: string;
+  collectionName: string;
+  id: string;
+  filled: boolean;
+  fills: PromptFillSummary[]|null;
+  categories: WorkCategory[] | null;
 }

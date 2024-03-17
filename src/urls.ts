@@ -57,3 +57,45 @@ export const getWorkDetailsFromUrl = ({
     collectionName: url.match(/collections\/(\w+)/)?.[1],
   };
 };
+
+
+export const getPromptDetailsFromUrl = ({
+  // defining the input structure, eg.
+  // url: "https://archiveofourown.org/collections/mo_dao_zu_shi_kink_meme_2020/prompts/2644428"
+  url, 
+}: {
+  url: string;
+}): {
+  //defining the form of the return value/output
+  //collection name is the url name, not the Display Title
+  promptId: string;
+  collectionName: string
+} => {
+  const promptUrlMatch = url.match(/prompts\/(\d+)/);
+  if (!promptUrlMatch) {
+    throw new Error("Invalid prompt URL");
+  }
+
+  const collectionMatch = url.match(/collections\/(\w+)/);
+  if (!collectionMatch) {
+    throw new Error("Invalid prompt URL");
+  }
+
+  return {
+    promptId: promptUrlMatch[1],
+    collectionName: collectionMatch[1]
+  };
+};
+
+export const getPromptUrl = ({
+  promptId,
+  collectionName
+}:{
+  promptId: string,
+  collectionName:string
+})=>{
+  let workUrl = `https://archiveofourown.org`;
+  workUrl += `/collections/${collectionName}`;
+  workUrl += `/prompts/${promptId}`;
+  return workUrl;
+}
